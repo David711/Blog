@@ -1,3 +1,7 @@
+<?php
+include_once ('funciones.php');
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,22 +21,43 @@
     
 <div class="fondo">
     <div class="contenido">
+        
+<?php
+//conectamos con la base de datos
+$link = mysql_connect('localhost','ejeblog', 'ejeblogpsw');
+mysql_select_db('blog');
+
+//seleccionamos las entradas
+$query ="SELECT * FROM entradas ORDER BY fecha DESC";
+$queryEntradas= mysql_query($query);
+
+while($entrada= mysql_fetch_object($queryEntradas)){
+    //recogemos sus valores
+$id = $entrada-> id_entrada;
+$fechasql= $entrada-> fecha;
+$imagen= $entrada->imagen;
+$descripcion= $entrada->descripcion_img;
+$titulo= $entrada->titulo;
+$texto= $entrada->texto;
+
+
+?>
+        
+        
         <div class="entrada">
             
            <div class="contenedorimagen">
-             <img class="imagen" src="imagenes/comunes/junta.jpg" alt="junta" title="junta"/>
+             <img class="imagen" src="imagenes/<?php echo $imagen; ?>" alt="<?php echo $descripcion; ?>" title="<?php echo $descripcion; ?>"/>
             
            </div> 
            <div class="informacion">
-            <p class="fecha"> 27 de Febrero de 2018</p>
-            <h2 class="titulo"> EJEMPLO DE TITULO DE ENTRADA </h2>
-            <p class="texto"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-            Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat,
-            vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+            <p class="fecha"> <?php echo fechaTxt($fechasql);?></p>
+            <h2 class="titulo"><?php echo $titulo; ?> </h2>
+            <p class="texto"> <?php echo $texto; ?>
             </p>
             
             <form action="entrada.php" method="post" enctype="multipart/form-data">
+                <input type="number" name="numero" value="<?php echo $id; ?>" style="display: none;" />
                 
                <input type="submit" class="boton leer" value="LEER MAS"/> 
                     
@@ -41,6 +66,16 @@
            </div>
             
         </div>
+        
+<?php
+};
+
+mysql_close($link);
+?>
+        
+        
+        
+        
         
     </div>
  
@@ -70,4 +105,8 @@
 </body>
 </html>
 
+<?php
+
+
+?>
 
